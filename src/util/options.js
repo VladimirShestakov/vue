@@ -340,8 +340,16 @@ exports.mergeOptions = function merge (parent, child, vm) {
  */
 
 exports.resolveAsset = function resolve (options, type, id) {
+
   var camelizedId = _.camelize(id)
   var asset = options[type][id] || options[type][camelizedId]
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (!asset && !config.strict) {
+      _.deprecation.STRICT_MODE()
+    }
+  }
+
   while (
     !asset && options._parent &&
     (!config.strict || options._repeat)
